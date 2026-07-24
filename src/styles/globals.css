@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/* ── Tailwind v4 custom theme tokens ─────────────────────────────────── */
+@theme {
+  --font-heading: 'Syne', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-sans:    'Inter', sans-serif;
+
+  --color-primary:       #E51A4B;
+  --color-primary-dim:   rgba(229,26,75,0.15);
+  --color-primary-glow:  rgba(229,26,75,0.4);
+  --color-accent:        #E2EC07;
+  --color-accent-dim:    rgba(226,236,7,0.12);
+  --color-bg:            #080808;
+  --color-bg2:           #0f0f0f;
+  --color-bg3:           #141414;
+  --color-surface:       rgba(255,255,255,0.04);
+  --color-surface2:      rgba(255,255,255,0.07);
+  --color-border:        rgba(255,255,255,0.08);
+  --color-border2:       rgba(255,255,255,0.12);
+  --color-muted:         rgba(255,255,255,0.55);
+  --color-faint:         rgba(255,255,255,0.3);
+
+  --ease-expo:           cubic-bezier(0.16, 1, 0.3, 1);
+
+  --shadow-glow-primary: 0 0 40px rgba(229,26,75,0.35);
+  --shadow-glow-accent:  0 0 40px rgba(226,236,7,0.25);
+}
+
+/* ── Base resets ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #080808;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+#root { width: 100%; overflow-x: hidden; }
+
+img  { display: block; max-width: 100%; }
+a    { text-decoration: none; color: inherit; }
+button { cursor: pointer; }
+ul,ol  { list-style: none; }
+
+/* ── Custom scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar          { width: 4px; }
+::-webkit-scrollbar-track    { background: #080808; }
+::-webkit-scrollbar-thumb    { background: #E51A4B; border-radius: 9999px; }
+
+/* ── Text selection ──────────────────────────────────────────────────── */
+::selection { background: rgba(229,26,75,0.3); color: #ffffff; }
+
+/* ── Gradient text utility ──────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #E51A4B 0%, #ff6b6b 50%, #E2EC07 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glass card ──────────────────────────────────────────────────────── */
+.glass-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── Logo ticker animation ───────────────────────────────────────────── */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ticker-track { animation: ticker 25s linear infinite; }
+.ticker-track:hover { animation-play-state: paused; }
+
+/* ── Floating orb ────────────────────────────────────────────────────── */
+@keyframes float {
+  0%,100% { transform: translateY(0px) scale(1); }
+  50%      { transform: translateY(-24px) scale(1.04); }
+}
+.float-anim  { animation: float 6s ease-in-out infinite; }
+.float-anim2 { animation: float 8s ease-in-out infinite 2s; }
+
+/* ── Noise overlay (fixed, non-interactive) ──────────────────────────── */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ── Section label ───────────────────────────────────────────────────── */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #E51A4B;
+  background: rgba(229,26,75,0.12);
+  border: 1px solid rgba(229,26,75,0.25);
+  padding: 6px 16px;
+  border-radius: 9999px;
+}
+
+/* ── Hero grid bg ──────────────────────────────────────────────────── */
+.hero-grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── 3-D perspective utility ─────────────────────────────────────────── */
+.perspective-\[1200px\] { perspective: 1200px; }
+.perspective-\[1000px\] { perspective: 1000px; }
+
+/* ── FAQ accordion transitions ───────────────────────────────────────── */
+.faq-answer-enter       { max-height: 0; opacity: 0; overflow: hidden; }
+.faq-answer-enter-done  { max-height: 600px; opacity: 1; transition: max-height 0.4s ease, opacity 0.3s ease; }
+.faq-answer-exit        { max-height: 600px; opacity: 1; overflow: hidden; }
+.faq-answer-exit-done   { max-height: 0; opacity: 0; transition: max-height 0.3s ease, opacity 0.2s ease; }
+
+/* ── Shimmer / animated gradient text ───────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.gradient-text-animated {
+  background: linear-gradient(90deg, #E51A4B, #ff6b6b, #E2EC07, #E51A4B);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ── Hero word 3D preserve ───────────────────────────────────────────── */
+.hero-word {
+  display: inline-block;
+  transform-style: preserve-3d;
+}
+
