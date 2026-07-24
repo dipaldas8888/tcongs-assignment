@@ -31,46 +31,46 @@ export default function HeroSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      // ── 1. BADGE (slides + fades in) ─────────────────────────
+      // ── 1. BADGE (slides + fades in instantly) ─────────────────────────
       gsap.fromTo('.hero-badge-pill',
-        { y: -40, opacity: 0, scale: 0.85 },
-        { y: 0,   opacity: 1, scale: 1, duration: 0.9, ease: 'back.out(1.7)', delay: 0.1 }
+        { y: -20, opacity: 0, scale: 0.95 },
+        { y: 0,   opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out', delay: 0.02 }
       )
 
-      // ── 2. HEADLINE: 3-D flip-up per word ────────────────────
+      // ── 2. HEADLINE: Fast 3-D flip-up per word ────────────────────
       gsap.set('.hero-word', { transformStyle: 'preserve-3d', transformPerspective: 1200 })
       gsap.fromTo('.hero-word',
-        { y: 90, opacity: 0, rotateX: -55, skewX: 8 },
+        { y: 40, opacity: 0, rotateX: -30 },
         {
-          y: 0, opacity: 1, rotateX: 0, skewX: 0,
-          stagger: 0.08, duration: 1.1, ease: 'power4.out', delay: 0.35,
+          y: 0, opacity: 1, rotateX: 0,
+          stagger: 0.03, duration: 0.5, ease: 'power3.out', delay: 0.05,
         }
       )
 
       // ── 3. SUB-HEADLINE ───────────────────────────────────────
       gsap.fromTo('.hero-sub',
-        { y: 28, opacity: 0, clipPath: 'inset(0 100% 0 0)' },
-        { y: 0,  opacity: 1, clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power3.out', delay: 0.9 }
+        { y: 15, opacity: 0 },
+        { y: 0,  opacity: 1, duration: 0.4, ease: 'power2.out', delay: 0.15 }
       )
 
       // ── 4. BUTTONS ────────────────────────────────────────────
       gsap.fromTo('.hero-btns > *',
-        { y: 24, opacity: 0, scale: 0.9 },
-        { y: 0,  opacity: 1, scale: 1, stagger: 0.12, duration: 0.8, ease: 'back.out(1.4)', delay: 1.1 }
+        { y: 15, opacity: 0, scale: 0.95 },
+        { y: 0,  opacity: 1, scale: 1, stagger: 0.06, duration: 0.4, ease: 'power2.out', delay: 0.22 }
       )
 
       // ── 5. GREAT-AT banner ────────────────────────────────────
       gsap.fromTo('.hero-great-at',
-        { y: 35, opacity: 0 },
-        { y: 0,  opacity: 1, duration: 0.9, ease: 'power3.out', delay: 1.4 }
+        { y: 20, opacity: 0 },
+        { y: 0,  opacity: 1, duration: 0.4, ease: 'power2.out', delay: 0.3 }
       )
 
       // ── 6. FLOATING 3-D CARDS ─────────────────────────────────
       gsap.fromTo('.hero-float-card',
-        { opacity: 0, scale: 0.7, y: 30, rotateY: -15 },
+        { opacity: 0, scale: 0.8, y: 20 },
         {
-          opacity: 1, scale: 1, y: 0, rotateY: 0,
-          stagger: 0.18, duration: 1, ease: 'power3.out', delay: 1.5,
+          opacity: 1, scale: 1, y: 0,
+          stagger: 0.1, duration: 0.5, ease: 'power2.out', delay: 0.35,
         }
       )
       // continuous bob animation
@@ -88,14 +88,14 @@ export default function HeroSection() {
           opacity: `random(0.1,0.6)`,
           duration: `random(3,7)`,
           repeat: -1, yoyo: true, ease: 'sine.inOut',
-          delay: i * 0.15,
+          delay: i * 0.1,
         })
       })
 
       // ── 8. ORB FLOAT ─────────────────────────────────────────
       gsap.to(orbRef1.current, { y: -35, x: 20,  duration: 8,  repeat: -1, yoyo: true, ease: 'sine.inOut' })
-      gsap.to(orbRef2.current, { y: 28,  x: -25, duration: 10, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.5 })
-      gsap.to(orbRef3.current, { y: -20, x: 15,  duration: 6,  repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.8 })
+      gsap.to(orbRef2.current, { y: 28,  x: -25, duration: 10, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.5 })
+      gsap.to(orbRef3.current, { y: -20, x: 15,  duration: 6,  repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.3 })
 
       // ── 9. MOUSE PARALLAX (grid + headline perspective shift) ──
       const onMouseMove = (e) => {
@@ -108,7 +108,7 @@ export default function HeroSection() {
           transformPerspective: 1000, duration: 0.8, ease: 'power2.out',
         })
       }
-      window.addEventListener('mousemove', onMouseMove)
+      window.addEventListener('mousemove', onMouseMove, { passive: true })
       return () => window.removeEventListener('mousemove', onMouseMove)
     }, containerRef)
     return () => ctx.revert()
@@ -253,7 +253,7 @@ export default function HeroSection() {
 
       {/* ── Scroll indicator ─────────────────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
         <span className="text-white/25 text-[10px] tracking-widest uppercase">Scroll</span>

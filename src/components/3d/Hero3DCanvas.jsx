@@ -8,23 +8,30 @@ export default function Hero3DCanvas() {
     const container = mountRef.current
     if (!container) return
 
-    // Scene setup
-    const scene = new THREE.Scene()
-    
-    // Camera
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      container.clientWidth / container.clientHeight,
-      0.1,
-      1000
-    )
-    camera.position.z = 14
+    let reqId
+    let animReqId
 
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
-    renderer.setSize(container.clientWidth, container.clientHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    container.appendChild(renderer.domElement)
+    // Defer WebGL context creation to next frame to allow DOM text to render immediately first
+    reqId = requestAnimationFrame(() => {
+      if (!mountRef.current) return
+
+      // Scene setup
+      const scene = new THREE.Scene()
+      
+      // Camera
+      const camera = new THREE.PerspectiveCamera(
+        45,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        1000
+      )
+      camera.position.z = 14
+
+      // Renderer
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' })
+      renderer.setSize(container.clientWidth, container.clientHeight)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
+      container.appendChild(renderer.domElement)
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8)
@@ -194,10 +201,9 @@ export default function Hero3DCanvas() {
 
     // Animation Loop
     let clock = new THREE.Clock()
-    let reqId
 
     const animate = () => {
-      reqId = requestAnimationFrame(animate)
+      animReqId = requestAnimationFrame(animate)
       const elapsedTime = clock.getElapsedTime()
 
       targetX += (mouseX - targetX) * 0.05
@@ -236,15 +242,16 @@ export default function Hero3DCanvas() {
     }
 
     animate()
+    })
 
     return () => {
-      cancelAnimationFrame(reqId)
+      if (reqId) cancelAnimationFrame(reqId)
+      if (animReqId) cancelAnimationFrame(animReqId)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('resize', onResize)
-      if (container && renderer.domElement) {
-        container.removeChild(renderer.domElement)
+      if (container && container.innerHTML) {
+        container.innerHTML = ''
       }
-      renderer.dispose()
     }
   }, [])
 

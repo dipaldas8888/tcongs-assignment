@@ -1,23 +1,24 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, lazy, Suspense } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navbar from './components/layout/Navbar'
-import Footer from './components/layout/Footer'
 import HeroSection from './components/sections/HeroSection'
-import LogoTicker from './components/sections/LogoTicker'
-import ServicesSection from './components/sections/ServicesSection'
-import StatsSection from './components/sections/StatsSection'
-import ProcessSection from './components/sections/ProcessSection'
-import TestimonialsSection from './components/sections/TestimonialsSection'
-import CTASection from './components/sections/CTASection'
-import FaqSection from './components/sections/FaqSection'
 import './styles/globals.css'
+
+// Lazy-load below-the-fold sections so Hero loads first and ultra fast
+const LogoTicker = lazy(() => import('./components/sections/LogoTicker'))
+const ServicesSection = lazy(() => import('./components/sections/ServicesSection'))
+const StatsSection = lazy(() => import('./components/sections/StatsSection'))
+const ProcessSection = lazy(() => import('./components/sections/ProcessSection'))
+const TestimonialsSection = lazy(() => import('./components/sections/TestimonialsSection'))
+const FaqSection = lazy(() => import('./components/sections/FaqSection'))
+const CTASection = lazy(() => import('./components/sections/CTASection'))
+const Footer = lazy(() => import('./components/layout/Footer'))
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function App() {
   const cursorRef = useRef(null)
-  const [loaded, setLoaded] = useState(false)
 
   // Cursor glow follow
   useEffect(() => {
@@ -34,16 +35,14 @@ export default function App() {
     return () => window.removeEventListener('mousemove', onMove)
   }, [])
 
-  // Page load animation
+  // Fast Page load transition
   useEffect(() => {
-    const tl = gsap.timeline({
-      onComplete: () => setLoaded(true),
+    gsap.to('#page-loader', {
+      scaleY: 0,
+      duration: 0.3,
+      ease: 'power3.inOut',
+      transformOrigin: 'top',
     })
-    tl.fromTo(
-      '#page-loader',
-      { scaleY: 1 },
-      { scaleY: 0, duration: 0.9, ease: 'power4.inOut', transformOrigin: 'top', delay: 0.3 }
-    )
   }, [])
 
   return (
@@ -77,16 +76,21 @@ export default function App() {
       <div className="relative min-h-screen bg-[#080808] text-white">
         <Navbar />
         <main>
+          {/* Hero renders immediately */}
           <HeroSection />
-          <LogoTicker />
-          <ServicesSection />
-          <StatsSection />
-          <ProcessSection />
-          <TestimonialsSection />
-          <FaqSection />
-          <CTASection />
+
+          {/* Defer loading of remaining below-the-fold sections */}
+          <Suspense fallback={<div className="min-h-[200px]" />}>
+            <LogoTicker />
+            <ServicesSection />
+            <StatsSection />
+            <ProcessSection />
+            <TestimonialsSection />
+            <FaqSection />
+            <CTASection />
+            <Footer />
+          </Suspense>
         </main>
-        <Footer />
 
         {/* Floating Chat widget button */}
         <div className="fixed bottom-6 right-6 z-50">
